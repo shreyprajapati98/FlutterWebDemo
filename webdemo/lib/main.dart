@@ -1,46 +1,87 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:webdemo/utils/authentication.dart';
 import 'package:flutter/material.dart';
-import 'package:webdemo/LandingPage/LandingPage.dart';
-import 'package:webdemo/Navbar/Navbar.dart';
 
-void main() => runApp(MyApp());
+import 'screens/home_page.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "Montserrat"),
-      home: MyHomePage(),
-    );
-  }
+void main() {
+  runApp(MyApp());
 }
 
-class MyHomePage extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future getUserInfo() async {
+    await getUser();
+    setState(() {});
+    print(uid);
+  }
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Color.fromRGBO(195, 20, 50, 1.0),
-                Color.fromRGBO(36, 11, 54, 1.0)
-              ]),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Navbar(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 40.0),
-                child: LandingPage(),
+    return DynamicTheme(
+      defaultBrightness: Brightness.light,
+      data: (brightness) {
+        return brightness == Brightness.light
+            ? ThemeData(
+                primarySwatch: Colors.blueGrey,
+                backgroundColor: Colors.white,
+                cardColor: Colors.blueGrey[50],
+                primaryTextTheme: TextTheme(
+                  button: TextStyle(
+                    color: Colors.blueGrey,
+                    decorationColor: Colors.blueGrey[300],
+                  ),
+                  subtitle2: TextStyle(
+                    color: Colors.blueGrey[900],
+                  ),
+                  subtitle1: TextStyle(
+                    color: Colors.black,
+                  ),
+                  headline1: TextStyle(color: Colors.blueGrey[800]),
+                ),
+                bottomAppBarColor: Colors.blueGrey[900],
+                iconTheme: IconThemeData(color: Colors.blueGrey),
+                brightness: brightness,
               )
-            ],
-          ),
-        ),
+            : ThemeData(
+                primarySwatch: Colors.blueGrey,
+                backgroundColor: Colors.blueGrey[900],
+                cardColor: Colors.black,
+                primaryTextTheme: TextTheme(
+                  button: TextStyle(
+                    color: Colors.blueGrey[200],
+                    decorationColor: Colors.blueGrey[50],
+                  ),
+                  subtitle2: TextStyle(
+                    color: Colors.white,
+                  ),
+                  subtitle1: TextStyle(
+                    color: Colors.blueGrey[300],
+                  ),
+                  headline1: TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
+                bottomAppBarColor: Colors.black,
+                iconTheme: IconThemeData(color: Colors.blueGrey[200]),
+                brightness: brightness,
+              );
+      },
+      themedWidgetBuilder: (context, data) => MaterialApp(
+        title: 'Explore',
+        theme: data,
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
       ),
     );
   }
